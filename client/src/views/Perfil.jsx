@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 import Swal from "sweetalert2"; 
-import logoPerfilDefault from "../assets/img/logo-ea.png"; 
+import logoPerfilDefault from "../assets/img/Logo-EA.png"; 
 
 const Perfil = () => {
   const {user} = useContext(ProductContext);
