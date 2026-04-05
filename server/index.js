@@ -56,6 +56,7 @@ app.get("/products", async (req, res) => {
     res.json(productsFormatted);
   } catch (error) {
     res.status(500).json({ error: "Error al obtener catálogo" });
+    console.error("Error al obtener catálogo:", error.message);
   }
 });
 
