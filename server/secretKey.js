@@ -1,0 +1,1 @@
+module.exports = "llave_secreta_enredaarte_2026";
