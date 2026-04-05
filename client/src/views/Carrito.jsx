@@ -22,7 +22,7 @@ const Carrito = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/orders", {
+      const response = await fetch("https://enreda-arte.onrender.com/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

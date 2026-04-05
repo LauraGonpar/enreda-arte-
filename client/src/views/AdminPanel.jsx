@@ -21,7 +21,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await fetch("http://localhost:3000/users", {
+        const response = await fetch("https://enreda-arte.onrender.com/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -52,7 +52,7 @@ const AdminPanel = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/products", {
+      const response = await fetch("https://enreda-arte.onrender.com/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

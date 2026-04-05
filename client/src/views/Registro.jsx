@@ -14,7 +14,7 @@ const Registro = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/users", {
+      const response = await fetch("https://enreda-arte.onrender.com/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, email, password, telefono }),
