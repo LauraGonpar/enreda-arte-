@@ -82,6 +82,6 @@ app.post("/products", async (req, res) => {
 
 
 if (require.main === module) {
-  app.listen(3000, () => console.log("🔥 EnredaArte Server en puerto 3000"));
+  app.listen(3000, () => console.log("🔥 EnredaArte Server en puerto 3000 (neon)"));
 }
 module.exports = app;
