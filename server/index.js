@@ -30,7 +30,7 @@ app.get("/users", async (req, res) => {
     const { rows } = await pool.query("SELECT * FROM users"); 
     res.json(rows);
   } catch (error) {
-    console.error("Error en la base de datos:", error.message);
+    console.error("Error en la base de datos:", error);
     res.status(500).json({ error: "No se pudo obtener la lista" });
   }
 });
@@ -56,7 +56,6 @@ app.get("/products", async (req, res) => {
     res.json(productsFormatted);
   } catch (error) {
     res.status(500).json({ error: "Error al obtener catálogo" });
-    console.error("Error al obtener catálogo:", error.message);
   }
 });
 
