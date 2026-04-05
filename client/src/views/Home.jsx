@@ -2,8 +2,6 @@ import { useContext } from "react";
 import { ProductContext } from "../context/ProductContext";
 import { useNavigate } from "react-router-dom";
 
-import Aros from "../assets/img/aros model.png";
-import Pulseras from "../assets/img/pulsera-model.png";
 
 const Home = () => {
   const { products, imagenesMapa } = useContext(ProductContext);
@@ -43,7 +41,7 @@ const Home = () => {
             style={{ cursor: "pointer" }}
           >
             <div className="category-card shadow-sm border-0 card">
-              <img src={Aros} className="card-img-top" alt="Aros" />
+              <img src="https://i.ibb.co/PZv8ncJd/aros-model.png" className="card-img-top" alt="Aros" />
               <div className="card-footer bg-white border-0 py-3 text-center">
                 <h5 className="mb-0 text-enredarte-red fw-bold">Aros</h5>
               </div>
@@ -56,7 +54,7 @@ const Home = () => {
             style={{ cursor: "pointer" }}
           >
             <div className="category-card shadow-sm border-0 card">
-              <img src={Pulseras} className="card-img-top" alt="Pulseras" />
+              <img src="https://i.ibb.co/Vc8fKWS9/Pulsera-model.png" className="card-img-top" alt="Pulseras" />
               <div className="card-footer bg-white border-0 py-3 text-center">
                 <h5 className="mb-0 text-enredarte-red fw-bold">Pulseras</h5>
               </div>
