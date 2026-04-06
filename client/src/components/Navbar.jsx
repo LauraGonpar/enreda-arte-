@@ -29,14 +29,12 @@ const Navbar = () => {
 
   return (
     <nav className="fixed-top shadow-sm navbar navbar-expand-md p-0 flex-column">
-      {/* Banner superior */}
       <div className="bg-enredarte-red text-white text-center py-2 small fw-light w-100">
         Bienvenid@s a una experiencia diferente!!!
       </div>
 
-      <div className="bg-enredarte-cream py-3 w-100">
+      <div className="bg-enredarte-cream py-3 w-100 d-none d-md-flex gap-4 align-items-center">
         <div className="container-fluid px-lg-5 d-flex align-items-center justify-content-between">
-          {/* LOGO */}
           <Link
             to="/"
             className="d-flex align-items-center text-decoration-none text-dark"
@@ -51,7 +49,6 @@ const Navbar = () => {
             <span className="fs-4 fw-bold letter-spacing-1">EnredaArte</span>
           </Link>
 
-          {/* BOTÓN HAMBURGUESA (Solo visible en móvil) */}
           <button
             className="navbar-toggler border-0 shadow-none d-md-none"
             type="button"
@@ -62,7 +59,6 @@ const Navbar = () => {
             ></i>
           </button>
 
-          {/* MENÚ DE LINKS (Colapsable en móvil) */}
           <div
             className={`${isMenuOpen ? "d-flex" : "d-none"} d-md-flex flex-column flex-md-row position-absolute position-md-static top-100 start-0 w-100 w-md-auto bg-enredarte-cream p-4 p-md-0 gap-4 align-items-center z-3 shadow-sm shadow-md-none`}
           >
@@ -117,7 +113,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* ICONOS (Siempre visibles) */}
           <div className="d-flex align-items-center gap-3">
             <Link
               to="/carrito"
