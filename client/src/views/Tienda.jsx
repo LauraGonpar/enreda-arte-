@@ -85,10 +85,11 @@ const Tienda = () => {
                         className="btn btn-sm position-absolute top-0 end-0 m-3 px-3 py-1 fw-bold border border-dark bg-light text-dark shadow-sm"
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           toggleFavorite(p);
                         }}
                         style={{
-                          zIndex: 10,
+                          zIndex: 20,
                           borderRadius: "50px",
                           fontSize: "0.8rem",
                           width: "40px",

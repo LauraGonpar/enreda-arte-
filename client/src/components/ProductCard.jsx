@@ -37,11 +37,11 @@ const ProductCard = ({ product }) => {
 
       <div onClick={() => navigate(`/producto/${product.id}`)} style={{ cursor: 'pointer' }}>
         <img 
-          src={imagenesMapa[product.id]} 
-          className="card-img-top w-100" 
-          alt={product.nombre} 
-          style={{ height: "280px", objectFit: "cover", borderRadius: "8px 8px 0 0" }}
-        />
+  src={product.imagen || (imagenesMapa && imagenesMapa[product.id]) || "https://via.placeholder.com/300"} 
+  className="card-img-top w-100" 
+  alt={product.nombre} 
+  style={{ height: "280px", objectFit: "cover", borderRadius: "8px 8px 0 0" }}
+/>
         
         <div className="card-body d-flex flex-column">
           <h6 className="fw-bold text-enredarte-red mb-1" style={{ fontSize: '1.1rem' }}>

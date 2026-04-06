@@ -3,36 +3,64 @@ import { createContext, useState, useEffect } from "react";
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  
+  const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem("favs")) || []);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null,
+  );
 
-
-const addToCart = (product) => {
-  setCart((prevCart) => {
-    const existingProduct = prevCart.find((item) => item.id === product.id);
-
-    if (existingProduct) {
-      return prevCart.map((item) =>
-        item.id === product.id 
-          ? { ...item, count: (item.count || 1) + 1 } 
-          : item
+  const toggleFavorite = async (product) => {
+    if (!token) return;
+    try {
+      const response = await fetch(
+        "https://enreda-arte.onrender.com/favoritos",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ product_id: product.id }),
+        },
       );
-    } else {
-      return [...prevCart, { ...product, count: 1 }];
+      if (response.ok) {
+        setFavorites((prev) => {
+          const isFav = prev.some((fav) => fav.id === product.id);
+          return isFav
+            ? prev.filter((fav) => fav.id !== product.id)
+            : [...prev, product];
+        });
+      }
+    } catch (error) {
+      console.error("No se pudo guardar el favorito:", error);
     }
-  });
-  
-  console.log("Producto agregado:", product.nombre);
-};
+  };
+
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const existingProduct = prevCart.find((item) => item.id === product.id);
+
+      if (existingProduct) {
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, count: (item.count || 1) + 1 }
+            : item,
+        );
+      } else {
+        return [...prevCart, { ...product, count: 1 }];
+      }
+    });
+
+    console.log("Producto agregado:", product.nombre);
+  };
 
   const getProducts = async () => {
     try {
       const response = await fetch("https://enreda-arte.onrender.com/products");
       const data = await response.json();
-      setProducts(data); 
+      setProducts(data);
     } catch (error) {
       console.error("Error al conectar con el servidor de EnredaArte:", error);
     }
@@ -41,12 +69,34 @@ const addToCart = (product) => {
   useEffect(() => {
     getProducts();
   }, []);
+  useEffect(() => {
+    localStorage.setItem("favs", JSON.stringify(favorites));
+  }, [favorites]);
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (token) {
+        try {
+          const response = await fetch(
+            "https://enreda-arte.onrender.com/usuarios/favoritos",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+          const data = await response.json();
+          setFavorites(data);
+        } catch (error) {
+          console.error("Error al cargar favoritos de EnredaArte:", error);
+        }
+      }
+    };
+    fetchFavorites();
+  }, [token]);
 
   const login = (userToken, userData) => {
     setToken(userToken);
     setUser(userData);
     localStorage.setItem("token", userToken);
-    localStorage.setItem("user", JSON.stringify(userData)); 
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
@@ -55,25 +105,25 @@ const addToCart = (product) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };
-const updateQuantity = (id, newCount) => {
-  setCart((prevCart) =>
-    prevCart.map((item) =>
-      item.id === id ? { ...item, count: newCount } : item
-    )
+  const updateQuantity = (id, newCount) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id ? { ...item, count: newCount } : item,
+      ),
+    );
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  const cartTotal = cart.reduce(
+    (acc, item) => acc + Number(item.precio || 0) * (Number(item.count) || 1),
+    0,
   );
-};
-
-const removeFromCart = (id) => {
-  setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-};
-
-const cartTotal = cart.reduce(
-  (acc, item) => acc + Number(item.precio || 0) * (Number(item.count) || 1),
-  0
-);
-  const globalState = { 
-    products, 
-    setProducts, 
+  const globalState = {
+    products,
+    setProducts,
     cart,
     setCart,
     user,
@@ -83,11 +133,13 @@ const cartTotal = cart.reduce(
     cartTotal,
     updateQuantity,
     removeFromCart,
+    toggleFavorite,
+    favorites,
+
     addToCart,
     login,
-    logout
+    logout,
   };
-  
 
   return (
     <ProductContext.Provider value={globalState}>
