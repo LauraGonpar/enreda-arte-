@@ -144,17 +144,3 @@ body {
   overflow: hidden;
   background-color: #fff;
 }
-.bg-enredarte-cream {
-    background-color: #f8f5f0; 
-}
-
-.z-3 {
-    z-index: 1030; 
-}
-
-
-@media (max-width: 767px) {
-    .navbar-expand-md .container-fluid {
-        position: relative;
-    }
-}
