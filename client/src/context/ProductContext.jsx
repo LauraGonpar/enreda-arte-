@@ -26,7 +26,7 @@ const ProductProvider = ({ children }) => {
     });
     try {
       const response = await fetch(
-        "https://enreda-arte.onrender.com/favoritos",
+        "https://enreda-arte.onrender.com/favorites",
         {
           method: "POST",
           headers: {
@@ -90,7 +90,7 @@ const ProductProvider = ({ children }) => {
       if (token) {
         try {
           const response = await fetch(
-            "https://enreda-arte.onrender.com/usuarios/favoritos",
+            "https://enreda-arte.onrender.com/usuarios/favorites",
             {
               headers: { Authorization: `Bearer ${token}` },
             },
