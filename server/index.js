@@ -79,7 +79,16 @@ app.post("/products", async (req, res) => {
     res.status(500).json({ error: "No se pudo guardar el producto" });
   }
 });
-
+app.post("/favoritos", async (req, res) => {
+  try {
+    const { user_id, product_id } = req.body;
+    await guardarFavorito(user_id, product_id);
+    res.status(201).json({ message: "¡Joya guardada en favoritos!" });
+  } catch (error) {
+    console.error("Error al guardar:", error);
+    res.status(500).json({ error: "No se pudo guardar el favorito en EnredaArte" });
+  }
+});
 
 if (require.main === module) {
   app.listen(3000, () => console.log("🔥 EnredaArte Server en puerto 3000 (neon)"));

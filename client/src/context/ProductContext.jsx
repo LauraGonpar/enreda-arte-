@@ -5,14 +5,25 @@ export const ProductContext = createContext();
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem("favs")) || []);
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavs = localStorage.getItem("favs");
+    return savedFavs ? JSON.parse(savedFavs) : [];
+  });
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null,
   );
 
   const toggleFavorite = async (product) => {
-    if (!token) return;
+    if (!user) return;
+    setFavorites((prevFavorites) => {
+      const isFavorite = prevFavorites.some((fav) => fav.id === product.id);
+      if (isFavorite) {
+        return prevFavorites.filter((fav) => fav.id !== product.id);
+      } else {
+        return [...prevFavorites, product];
+      }
+    });
     try {
       const response = await fetch(
         "https://enreda-arte.onrender.com/favoritos",
@@ -69,9 +80,11 @@ const ProductProvider = ({ children }) => {
   useEffect(() => {
     getProducts();
   }, []);
+
   useEffect(() => {
     localStorage.setItem("favs", JSON.stringify(favorites));
   }, [favorites]);
+
   useEffect(() => {
     const fetchFavorites = async () => {
       if (token) {

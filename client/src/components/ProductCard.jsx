@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ProductCard = ({ product }) => {
-  const { addToCart, imagenesMapa, toggleFavorite, user } = useContext(ProductContext);
+  const { addToCart, imagenesMapa, toggleFavorite, user, favorites } = useContext(ProductContext);
   const navigate = useNavigate();
 
   if (!product) return null;
@@ -24,14 +24,15 @@ const ProductCard = ({ product }) => {
       confirmButtonColor: "#b38e6d", 
     });
   };
-
+  const isFav = favorites?.some((fav) => fav.id === product.id);
   return (
     <div className="card h-100 shadow-sm border-0 product-card-hover position-relative bg-white">
       
       {user && (
         <button
       className="btn btn-sm position-absolute top-0 end-0 m-3 px-3 py-1 fw-bold border border-dark bg-light text-dark shadow-sm" onClick={handleFavoriteClick} style={{ zIndex: 10, borderRadius: '50px', fontSize: '0.8rem', width: '40px', height: '40px',display:'flex',  alignItems: 'center', justifyContent: 'center' }}
-        > ♥️
+        > {/* Si es favorito, corazón rojo. Si no, corazón vacío */}
+    {isFav ? "❤️" : "🤍"}
 </button>
       )}
 
