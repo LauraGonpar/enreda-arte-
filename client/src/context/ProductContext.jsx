@@ -90,7 +90,7 @@ const ProductProvider = ({ children }) => {
       if (token) {
         try {
           const response = await fetch(
-            "https://enreda-arte.onrender.com/usuarios/favorites",
+            "https://enreda-arte.onrender.com/users/favorites",
             {
               headers: { Authorization: `Bearer ${token}` },
             },
