@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 // Vistas Públicas
 import Home from './views/Home';
 import Login from './views/Login';
+import Nosotros from './views/Nosotros';
 import Registro from './views/Registro';
 import DetalleProducto from './views/DetalleProducto';
 import Footer from './components/Footer';
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/nosotros" element={<Nosotros />}/>
           <Route path="/registro" element={<Registro />} />
           <Route path="/producto/:id" element={<DetalleProducto />} />
           <Route path="/tienda" element={<Tienda />} />

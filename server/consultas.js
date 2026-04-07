@@ -27,10 +27,21 @@ const registrarOrden = async (users_id, total) => {
 const guardarFavorito = async (user_id, product_id) => {
   await pool.query("INSERT INTO favorites (user_id, product_id) VALUES ($1, $2)", [user_id, product_id]);
 };
+const obtenerFavoritosPorUsuario = async (user_id) => {
+  const consulta = "SELECT * FROM favorites WHERE user_id = $1";
+  const { rows } = await pool.query(consulta, [user_id]);
+  return rows;
+};
+const actualizarProducto = async (id, nombre, descripcion, precio, imagen) => {
+  const consulta = "UPDATE products SET nombre = $1, precio = $2, descripcion = $3, categoria = $4 imagen = $5 WHERE id = $6 RETURNING *";
+  const valores = [nombre, precio, descripcion, categoria, imagen, id];
+  const { rows } = await pool.query(consulta, valores);
+  return rows[0];
+};
 
 const obtenerCatalogo = async () => {
   const { rows } = await pool.query("SELECT * FROM products");
   return rows;
 };
 
-module.exports = { registrarUsuario, obtenerUsuario, registrarOrden, guardarFavorito, obtenerCatalogo, pool };
+module.exports = { registrarUsuario, obtenerUsuario, registrarOrden, guardarFavorito, obtenerCatalogo, actualizarProducto, obtenerFavoritosPorUsuario, pool };
