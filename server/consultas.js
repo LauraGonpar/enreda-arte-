@@ -26,6 +26,8 @@ const registrarOrden = async (users_id, total) => {
 
 const guardarFavorito = async (user_id, product_id) => {
   await pool.query("INSERT INTO favorites (user_id, product_id) VALUES ($1, $2)", [user_id, product_id]);
+  const valores = [user_id, product_id];
+  await pool.query(consulta, valores);
 };
 const obtenerFavoritosPorUsuario = async (user_id) => {
   const consulta = "SELECT * FROM favorites WHERE user_id = $1";

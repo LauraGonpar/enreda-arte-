@@ -5,41 +5,49 @@ export const ProductContext = createContext();
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavs = localStorage.getItem("favs");
+    return savedFavs ? JSON.parse(savedFavs) : [];
+  });
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null,
   );
 
   const toggleFavorite = async (product) => {
-  if (!user || !token) {
-    Swal.fire("Inicia sesión", "Debes estar logueado para guardar favoritos", "warning");
-    return;
-  }
-
-  try {
-    const response = await fetch("https://enreda-arte.onrender.com/favoritos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify({ 
-        user_id: user.id, 
-        product_id: product.id 
-      }),
+    if (!user) return;
+    setFavorites((prevFavorites) => {
+      const isFavorite = prevFavorites.some((fav) => fav.id === product.id);
+      if (isFavorite) {
+        return prevFavorites.filter((fav) => fav.id !== product.id);
+      } else {
+        return [...prevFavorites, product];
+      }
     });
-
-    if (response.ok) {
-      setFavorites((prev) => {
-        const isFav = prev.some((fav) => fav.id === product.id);
-        return isFav ? prev.filter((f) => f.id !== product.id) : [...prev, product];
-      });
+    try {
+      const response = await fetch(
+        "https://enreda-arte.onrender.com/favorites",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ product_id: product.id }),
+        },
+      );
+      if (response.ok) {
+        setFavorites((prev) => {
+          const isFav = prev.some((fav) => fav.id === product.id);
+          return isFav
+            ? prev.filter((fav) => fav.id !== product.id)
+            : [...prev, product];
+        });
+      }
+    } catch (error) {
+      console.error("No se pudo guardar el favorito:", error);
     }
-  } catch (error) {
-    console.error("Error de conexión:", error);
-  }
-};
+  };
 
   const addToCart = (product) => {
     setCart((prevCart) => {
@@ -94,24 +102,16 @@ const updateProduct = async (id, updatedData) => {
   }, [favorites]);
 
   useEffect(() => {
-    if (token) {
-      const fetchFavorites = async () => {
-        try {
-          const response = await fetch("https://enreda-arte.onrender.com/favoritos", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          if (response.ok) {
-            const data = await response.json();
-            setFavorites(data); 
-          }
-        } catch (error) {
-          console.error("Error al traer favoritos:", error);
-        }
-      };
-      fetchFavorites();
-    } else {
-      setFavorites([]); }
-  }, [token]);
+  if (token) {
+    fetch("https://enreda-arte.onrender.com/favorites", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => setFavorites(data));
+  } else {
+    setFavorites([]);
+  }
+}, [token]);
 
   const login = (userToken, userData) => {
     setToken(userToken);
@@ -126,7 +126,6 @@ const updateProduct = async (id, updatedData) => {
     setFavorites([]);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("favs"); 
     Swal.fire("¡Hasta luego!", "Has cerrado sesión correctamente.", "success");
   };
   const updateQuantity = (id, newCount) => {
@@ -161,6 +160,7 @@ const updateProduct = async (id, updatedData) => {
     removeFromCart,
     toggleFavorite,
     updateProduct,
+
     favorites,
     addToCart,
     login,
