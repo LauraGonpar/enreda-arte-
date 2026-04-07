@@ -12,33 +12,34 @@ const ProductProvider = ({ children }) => {
   );
 
   const toggleFavorite = async (product) => {
-    if (!token) {
-      Swal.fire("Inicia sesión", "Debes estar logueado para guardar favoritos", "warning");
-      return;
-    }
-    try {
-      const response = await fetch("https://enreda-arte.onrender.com/favoritos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ product_id: product.id }),
+  if (!user || !token) {
+    Swal.fire("Inicia sesión", "Debes estar logueado para guardar favoritos", "warning");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://enreda-arte.onrender.com/favoritos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        user_id: user.id, 
+        product_id: product.id 
+      }),
+    });
+
+    if (response.ok) {
+      setFavorites((prev) => {
+        const isFav = prev.some((fav) => fav.id === product.id);
+        return isFav ? prev.filter((f) => f.id !== product.id) : [...prev, product];
       });
-      if (response.ok) {
-        setFavorites((prev) => {
-          const isFavorite = prev.some((fav) => fav.id === product.id);
-          if (isFavorite) {
-            return prev.filter((fav) => fav.id !== product.id);
-          } else {
-            return [...prev, product];
-          }
-        });
-      }
-    } catch (error) {
-      console.error("No se pudo guardar el favorito:", error);
     }
-  };
+  } catch (error) {
+    console.error("Error de conexión:", error);
+  }
+};
 
   const addToCart = (product) => {
     setCart((prevCart) => {
