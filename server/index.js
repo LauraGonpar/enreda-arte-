@@ -109,21 +109,36 @@ app.post("/products", async (req, res) => {
 });
 
 app.put("/products/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nombre, precio, descripcion, categoria, imagen } = req.body;
-        const productoEditado = await actualizarProducto(id, nombre, precio, descripcion, categoria, imagen);
-        res.json({ message: "¡Joya actualizada con éxito!", producto: productoEditado });
-    } catch (error) {
-        console.error("Error al editar:", error);
-        res.status(500).send("Error al actualizar el producto en Render");
-    }
+  try {
+    const { id } = req.params;
+    const { nombre, precio, descripcion, categoria, imagen } = req.body;
+    const productoEditado = await actualizarProducto(
+      id,
+      nombre,
+      precio,
+      descripcion,
+      categoria,
+      imagen,
+    );
+    res.json({
+      message: "¡Joya actualizada con éxito!",
+      producto: productoEditado,
+    });
+  } catch (error) {
+    console.error("Error al editar:", error);
+    res.status(500).send("Error al actualizar el producto en Render");
+  }
 });
 
 app.post("/orders", validarToken, async (req, res) => {
-  const { user_id, total } = req.body;
-  const orderId = await registrarOrden(user_id, total);
-  res.json({ status: "success", order_id: orderId });
+  try {
+    const { user_id, total, carrito } = req.body;
+    const orderId = await registrarOrden(user_id, total, carrito);
+    res.json({ status: "success", order_id: orderId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al procesar la compra" });
+  }
 });
 
 app.post("/favoritos", async (req, res) => {
