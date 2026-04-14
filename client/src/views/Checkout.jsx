@@ -51,7 +51,7 @@ const Checkout = () => {
       if (response.ok) {
         Swal.fire({
           title: "¡Compra Exitosa!",
-          text: "El stock ha sido actualizado correctamente.",
+          text: "Ahora te redigiremos a la página principal.",
           icon: "success",
           confirmButtonColor: "#b38e6d",
         }).then(() => {
